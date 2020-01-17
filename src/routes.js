@@ -7,7 +7,7 @@ import Article from "./pages/article/Article.component";
 const Routes = () => {
   return (
     <Switch>
-      <Route path="/" conponent={Home} exact />
+      <Route path="/" component={Home} exact />
       <Route path="/articles/:slug" conponent={Article} />
     </Switch>
   );
