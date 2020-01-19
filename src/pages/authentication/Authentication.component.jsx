@@ -6,6 +6,9 @@ const Authentication = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [{ isLoading, response, error }, doFetch] = useFetch(
+    "https://conduit.productionready.io/api/users/login"
+  );
 
   const handleSubmit = e => {
     e.preventDefault();
