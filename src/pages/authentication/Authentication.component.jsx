@@ -2,17 +2,19 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
+import useFetch from "../../hooks/useFetch";
+
 const Authentication = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [{ isLoading, response, error }, doFetch] = useFetch(
+  const [{ isLoading, error, response }, doFetch] = useFetch(
     "https://conduit.productionready.io/api/users/login"
   );
 
   const handleSubmit = e => {
     e.preventDefault();
-    setIsSubmitting(true);
+    doFetch({});
   };
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const Authentication = () => {
                   ></input>
                 </fieldset>
                 <button
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                   className="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
                 >
