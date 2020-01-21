@@ -1,32 +1,32 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default url => {
+  const baseUrl = "https://conduit.productionready.io/api";
   const [isLoading, setIsLoading] = useState(false);
-  const [response, setReponse] = useState(null);
+  const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  const [options, setOptions] = useState({});
 
-  const doFetch = () => {
- if (!isSubmitting) {
-        return;
-      }
-      axios("https://conduit.productionready.io/api/users/login", {
-        method: "post",
-        body: {
-          user: {
-            email: "dddd",
-            password: "ddd"
-          }
-        }
-      })
-        .then(res => {
-          console.log("res", res);
-          setIsSubmitting(false);
-        })
-        .catch(error => {
-          console.log("error", error);
-          setIsSubmitting(false);
-        });
-    });
+  const doFetch = (options = {}) => {
+    setOptions(options);
+    setIsLoading(true);
   };
-  return {{isLoading, response, error}, doFetch}
+
+  useEffect(() => {
+    if (!isLoading) {
+      return;
+    }
+    axios(baseUrl + url, options)
+      .then(res => {
+        setResponse(res.data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        setError(error.response.data);
+        setIsLoading(false);
+      });
+  }, [isLoading]);
+
+  return [{ isLoading, response, error }, doFetch];
 };

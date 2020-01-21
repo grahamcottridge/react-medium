@@ -1,44 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 import useFetch from "../../hooks/useFetch";
 
 const Authentication = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [{ isLoading, error, response }, doFetch] = useFetch(
-    "https://conduit.productionready.io/api/users/login"
-  );
+  const [{ isLoading, error, response }, doFetch] = useFetch("/users/login");
 
   const handleSubmit = e => {
     e.preventDefault();
-    doFetch({});
-  };
-
-  useEffect(() => {
-    if (!isSubmitting) {
-      return;
-    }
-    axios("https://conduit.productionready.io/api/users/login", {
+    doFetch({
       method: "post",
-      body: {
+      data: {
         user: {
-          email: "dddd",
-          password: "ddd"
+          email: "test@example.com",
+          password: "123"
         }
       }
-    })
-      .then(res => {
-        console.log("res", res);
-        setIsSubmitting(false);
-      })
-      .catch(error => {
-        console.log("error", error);
-        setIsSubmitting(false);
-      });
-  });
+    });
+  };
 
   return (
     <div className="auth-page">
@@ -84,4 +65,5 @@ const Authentication = () => {
     </div>
   );
 };
+
 export default Authentication;
