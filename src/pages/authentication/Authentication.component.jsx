@@ -3,10 +3,15 @@ import { Link } from "react-router-dom";
 
 import useFetch from "../../hooks/useFetch";
 
-const Authentication = () => {
+const Authentication = props => {
+  const isSignIn = props.match.path === "/signin";
+  const pageTitle = isSignIn ? "Sign In" : "Sign Up";
+  const descriptionLink = isSignIn ? "/signup" : "/signout";
+  const descriptionText = isSignIn ? "Need an account?" : "Have an account?";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [{ isLoading, error, response }, doFetch] = useFetch("/users/login");
+  const [{ isLoading, error, response }, doFetch] = useFetch("/users/signin");
+  console.log("props", props);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -26,9 +31,9 @@ const Authentication = () => {
       <div className="container page">
         <div className="row">
           <div className="col-md-6 offset-md-3 col-xs-12">
-            <h1 className="text-xs-center">Sign in</h1>
+            <h1 className="text-xs-center">{pageTitle}</h1>
             <p className="text-xs-center">
-              <Link to="/signup">Need an account?</Link>
+              <Link to={descriptionLink}>{descriptionText}</Link>
             </p>
             <form onSubmit={handleSubmit}>
               <fieldset>
@@ -55,7 +60,7 @@ const Authentication = () => {
                   className="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
                 >
-                  Sign in
+                  {pageTitle}
                 </button>
               </fieldset>
             </form>
