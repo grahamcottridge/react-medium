@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Redirect } from "react-router-dom";
 
 import useFetch from "../../hooks/useFetch";
 
@@ -8,23 +8,38 @@ const Authentication = props => {
   const pageTitle = isSignIn ? "Sign In" : "Sign Up";
   const descriptionLink = isSignIn ? "/signup" : "/signout";
   const descriptionText = isSignIn ? "Need an account?" : "Have an account?";
+  const apiUrl = isSignIn ? "/users/signin" : "/users";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [{ isLoading, error, response }, doFetch] = useFetch("/users/signin");
+  const [username, setUsername] = useState("");
+  const [isSuccessfullSubmit, setisSuccessfullSubmit] = useState(false);
+  const [{ isLoading, error, response }, doFetch] = useFetch(apiUrl);
   console.log("props", props);
 
   const handleSubmit = e => {
     e.preventDefault();
+    const user = isSignIn ? { email, password } : { email, password, username };
+
     doFetch({
       method: "post",
       data: {
-        user: {
-          email: "test@example.com",
-          password: "123"
-        }
+        user
       }
     });
   };
+
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+    console.log("response", response);
+    localStorage.setItem("token", response.user.token);
+    setisSuccessfullSubmit(true);
+  }, [response]);
+
+  if (isSuccessfullSubmit) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className="auth-page">
@@ -37,6 +52,17 @@ const Authentication = props => {
             </p>
             <form onSubmit={handleSubmit}>
               <fieldset>
+                {!isSignIn && (
+                  <fieldset className="form-group">
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      placeholder="Username"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)}
+                    ></input>
+                  </fieldset>
+                )}
                 <fieldset className="form-group">
                   <input
                     type="email"
