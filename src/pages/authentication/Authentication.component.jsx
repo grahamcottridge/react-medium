@@ -21,7 +21,6 @@ const Authentication = props => {
   const [currentUserState, setCurrentUserState] = useContext(
     CurrentUserContext
   );
-  console.log("error", error);
 
   const handleSubmit = e => {
     e.preventDefault();
